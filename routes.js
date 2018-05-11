@@ -4,27 +4,25 @@ const router = express.Router()
 
 // define the home page route
 router
-    .all("/availabilities", function (req, res, next) {
-        if (!req.params) {
-            res.err();
+    .all("/", function (req, res, next) {
+        if (!Object.keys(req.query).length) {
+            res.status(404);
+            res.send("provide query parameters yo!");
 
             return;
         }
 
         next();
     })
-    .get("/availabilities", function (req, res) {
-        if (!req.params) {
-
-        }
-        const {id, from, to} = req.params;
-
+    .get("/", function (req, res) {
+        const {id, from, to} = req.query;
+        res.send(JSON.stringify(["get", req.query]));
     })
-    .post("/availabilities", function (req, res) {
-        res.send("post availabilities")
+    .post("/", function (req, res) {
+        res.send(JSON.stringify(["post", req.query]));
     })
-    .delete("/availabilities", function (req, res) {
-        res.send("delete availabilities")
+    .delete("/", function (req, res) {
+        res.send(JSON.stringify(["delete", req.query]));
     });
 
 module.exports = router;
