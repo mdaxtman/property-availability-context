@@ -1,0 +1,19 @@
+{
+  "name": "property-availability-context",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdaxtman/property-availability-context.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdaxtman/property-availability-context/issues"
+  },
+  "homepage": "https://github.com/mdaxtman/property-availability-context#readme"
+}
