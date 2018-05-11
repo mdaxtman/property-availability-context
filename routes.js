@@ -1,5 +1,5 @@
 const express = require("express");
-
+const controller = require("./controller");
 const router = express.Router()
 
 // define the home page route
@@ -19,6 +19,9 @@ router
         res.send(JSON.stringify(["get", req.query]));
     })
     .post("/", function (req, res) {
+        const {id, dates} = req.query;
+        console.log("CONTROLLER", controller);
+        controller.createAvailability(id, dates);
         res.send(JSON.stringify(["post", req.query]));
     })
     .delete("/", function (req, res) {
