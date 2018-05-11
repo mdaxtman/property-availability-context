@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/mdaxtman/property-availability-context/issues"
   },
-  "homepage": "https://github.com/mdaxtman/property-availability-context#readme"
+  "homepage": "https://github.com/mdaxtman/property-availability-context#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.1",
+    "moment-timezone": "^0.5.16",
+    "superagent": "^3.8.3"
+  }
 }
