@@ -1,26 +1,61 @@
 const express = require("express");
-const controller = require("./controller");
-const router = express.Router()
+const controller = require("./controllers");
+const router = express.Router();
+const moment = require("moment");
+const groupDatesById = require("./utils/group-dates-by-id").default;
+
+const getDefaultRange = () => (
+    [ 
+        moment(new Date()).format(),
+        moment(new Date()).add(1, "month").format()
+    ]
+);
 
 // define the home page route
 router
     .all("/", function (req, res, next) {
-        if (!Object.keys(req.query).length) {
-            res.status(404);
-            res.send("provide query parameters yo!");
+        const {range} = req.query;
+        
+        if (range) {
+            if (Array.isArray(range)) {
+                const from = Date.parse(range[0]);
+                const to = Date.parse(range[1]);
 
-            return;
+                if (from && to && from < to) {
+                    next();
+
+                    return;
+                }
+            }
+
+            res.status(400);
+            res.send("range query is not properly formatted")
         }
 
         next();
     })
     .get("/", function (req, res) {
-        const {id, from, to} = req.query;
-        res.send(JSON.stringify(["get", req.query]));
+        const {id, range = getDefaultRange()} = req.query;
+
+        if (!id) {
+            console.log(groupDatesById);
+            
+            controller.getAvailabilityForAllProperties(range)
+                .then((data) => data.Items)
+                .then(groupDatesById)
+                .then((data) => {
+                    res.status(200);
+                    res.send(JSON.stringify(data));
+                })
+                .catch(() => {
+                    res.status(500);
+                    res.send("internal server error");
+                });
+        }
     })
-    .post("/", function (req, res) {
+    .put("/", function (req, res) {
         const {id, dates} = req.query;
-        console.log("CONTROLLER", controller);
+
         controller.createAvailability(id, dates);
         res.send(JSON.stringify(["post", req.query]));
     })
