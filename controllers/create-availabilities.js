@@ -18,22 +18,19 @@ function paramFactory(propertyId, date) {
 function createAvailability(propertyId, range) {
     return Promise.resolve(range)
         .then(([from, to]) => {
-            const last = moment(to).format();
             const current = moment(from);
             const dates = [];
 
-            while (Math.abs(current.diff(last, "days"))) {
-                dates.push(current.format());
+            while (Math.abs(current.diff(to, "days"))) {
+                dates.push(current.format("YYYY-MM-DD"));
 
                 current.add(1, "days");
             }
-
-            dates.push(last);
-
+            dates.push(to);
             return dates;
         })
         .then((dates) => {
-            const batchPuts = dates.map(date => new Promise((resolve) => {
+            const batchPuts = dates.map(date => new Promise((resolve, reject) => {
                 return dynamoDb
                     .putItem(
                         paramFactory(propertyId, date),
@@ -54,24 +51,6 @@ function createAvailability(propertyId, range) {
         .then((createdDates) => ({
             [propertyId]: createdDates
         }));
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        dynamoDb.putItem(params, function (err, data) {
-        if (err) {
-            console.log("BAD STUFF", err);
-        }
-        console.log("DATA!!!", data);
-    });
 }
 
 module.exports = {

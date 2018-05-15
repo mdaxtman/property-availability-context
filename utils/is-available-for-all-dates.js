@@ -1,6 +1,7 @@
 const moment = require("moment");
 
 function isAvailableForAllDates([from, to], dates) {
+  console.log(dates);
 
   if (!dates || !dates.length) {
     return false;

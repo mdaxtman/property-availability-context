@@ -6,8 +6,8 @@ const requestValidation = require("./utils/request-validation");
 
 const getDefaultRange = () => (
     [
-        moment(new Date()).format(),
-        moment(new Date()).add(1, "month").format()
+        moment(new Date()).format("YYYY-MM-DD"),
+        moment(new Date()).add(1, "month").format("YYYY-MM-DD")
     ]
 );
 
@@ -19,6 +19,15 @@ router
         if (!requestValidation.isDateRangeValid(range)) {
             res.status(400);
             res.send("range query is not properly formatted")
+        }
+
+        if (range) {
+            const [from, to] = range;
+
+            req.query.range = [
+                moment(from).format("YYYY-MM-DD"),
+                moment(to).format("YYYY-MM-DD")
+            ]
         }
 
         next();
