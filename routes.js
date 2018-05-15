@@ -63,12 +63,17 @@ router
             })
             .catch((err) => {
                 console.error("ERROR", err);
+
                 res.status(500);
                 res.send("internal server error");
             });
     })
     .put("/", function (req, res) {
         const {id, range} = req.query;
+
+        if (!id) {
+            res.status(400).send("id query must be present for this request");
+        }
 
         controller
             .createAvailability(id, range)
