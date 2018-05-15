@@ -7,5 +7,5 @@ module.exports = _.assign(
     {},
     deleteAvailability,
     createAvailability,
-    getAvailability)
-    ;
+    getAvailability
+);
