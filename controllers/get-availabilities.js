@@ -63,7 +63,7 @@ function getAvailabilityForProperty(id, [from, to]) {
 function isAvailable(id, range) {
 
  return getAvailabilityForProperty(id, range)
-  .then(results => console.log("RESULTS!!!", results) || isAvailableForAllDates(range, results[id]))
+  .then(results => isAvailableForAllDates(range, results[id]))
 }
 
 

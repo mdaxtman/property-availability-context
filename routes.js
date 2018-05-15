@@ -59,7 +59,7 @@ router
         controller.isAvailable(id, range)
             .then((data) => {
                 res.status(200);
-                res.send(JSON.stringify(data));
+                res.send(JSON.stringify({[id]: data}));
             })
             .catch((err) => {
                 console.error("ERROR", err);
@@ -73,6 +73,8 @@ router
 
         if (!id) {
             res.status(400).send("id query must be present for this request");
+
+            return;
         }
 
         controller
@@ -87,6 +89,12 @@ router
             });
     })
     .delete("/", function (req, res) {
+        if (!id) {
+            res.status(400).send("id query must be present for this request");
+
+            return;
+        }
+
         res.send(JSON.stringify(["delete", req.query]));
     });
 
