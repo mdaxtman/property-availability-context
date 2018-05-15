@@ -29,7 +29,7 @@ function deleteAvailability(propertyId, range) {
                 current.add(1, "days");
             }
             dates.push(to);
-            console.log(dates);
+
             return dates;
         })
         .then((dates) => {
@@ -38,7 +38,6 @@ function deleteAvailability(propertyId, range) {
                     .deleteItem(
                         paramFactory(propertyId, date),
                         (err, data) => {
-                            console.log(data);
                             if (err) {
                                 reject(err);
 

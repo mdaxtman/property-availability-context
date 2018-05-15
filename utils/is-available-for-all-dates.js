@@ -1,13 +1,13 @@
 const moment = require("moment");
 
 function isAvailableForAllDates([from, to], dates) {
-  console.log(dates);
+    if (!dates || !dates.length) {
+        return false;
+    }
 
-  if (!dates || !dates.length) {
-    return false;
-  }
-  const datesNeeded = Math.abs(moment(from).diff(to, "days")) + 1;
-  return dates.length === datesNeeded;
+    const datesNeeded = Math.abs(moment(from).diff(to, "days")) + 1;
+
+    return dates.length === datesNeeded;
 }
 
 module.exports = isAvailableForAllDates;
