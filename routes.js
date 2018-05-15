@@ -86,6 +86,10 @@ router
             return;
         }
 
+        if (!range) {
+            res.status(400).send("range query param must exist for this request");
+        }
+
         controller
             .createAvailability(id, range)
             .then((data) => {
@@ -98,13 +102,24 @@ router
             });
     })
     .delete("/", function (req, res) {
+        const { id, range } = req.query;
+
         if (!id) {
             res.status(400).send("id query must be present for this request");
 
             return;
         }
 
-        res.send(JSON.stringify(["delete", req.query]));
+        if (!range) {
+            res.status(400).send("range query param must exist for this request");
+        }
+
+        controller.deleteAvailability(id, range)
+            .then((data) => {
+                data.status = "deleted";
+                res.status(200)
+                    .send(JSON.stringify(data))
+            });
     });
 
 module.exports = router;
