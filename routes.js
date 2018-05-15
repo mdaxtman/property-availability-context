@@ -16,7 +16,7 @@ router
     .all("/", function (req, res, next) {
         const {range} = req.query;
 
-        if (!isDateRangeValid(range)) {
+        if (!requestValidation.isDateRangeValid(range)) {
             res.status(400);
             res.send("range query is not properly formatted")
         }
@@ -27,8 +27,6 @@ router
         const {id, range = getDefaultRange()} = req.query;
 
         if (!id) {
-            console.log(groupDatesById);
-
             controller.getAvailabilityForAllProperties(range)
                 .then((data) => {
                     res.status(200);
@@ -64,16 +62,24 @@ router
                 res.send(JSON.stringify(data));
             })
             .catch((err) => {
-                console.log("ERROR", err);
+                console.error("ERROR", err);
                 res.status(500);
                 res.send("internal server error");
             });
     })
     .put("/", function (req, res) {
-        const {id, dates} = req.query;
+        const {id, range} = req.query;
 
-        controller.createAvailability(id, dates);
-        res.send(JSON.stringify(["post", req.query]));
+        controller
+            .createAvailability(id, range)
+            .then((data) => {
+                res.status(201).send(JSON.stringify(data));
+            })
+            .catch((err) => {
+                console.error(err);
+
+                res.status(500).send("internal server error");
+            });
     })
     .delete("/", function (req, res) {
         res.send(JSON.stringify(["delete", req.query]));
