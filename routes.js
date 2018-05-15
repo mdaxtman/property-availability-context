@@ -5,7 +5,7 @@ const moment = require("moment");
 const groupDatesById = require("./utils/group-dates-by-id").default;
 
 const getDefaultRange = () => (
-    [ 
+    [
         moment(new Date()).format(),
         moment(new Date()).add(1, "month").format()
     ]
@@ -15,7 +15,7 @@ const getDefaultRange = () => (
 router
     .all("/", function (req, res, next) {
         const {range} = req.query;
-        
+
         if (range) {
             if (Array.isArray(range)) {
                 const from = Date.parse(range[0]);
@@ -39,9 +39,8 @@ router
 
         if (!id) {
             console.log(groupDatesById);
-            
+
             controller.getAvailabilityForAllProperties(range)
-                .then((data) => data.Items)
                 .then(groupDatesById)
                 .then((data) => {
                     res.status(200);
@@ -51,6 +50,18 @@ router
                     res.status(500);
                     res.send("internal server error");
                 });
+        } else {
+            console.log("HIIIIII");
+            controller.getAvailabilityForProperty(id, range)
+            .then(groupDatesById)
+            .then((data) => {
+                res.status(200);
+                res.send(JSON.stringify(data));
+            })
+            .catch(() => {
+                res.status(500);
+                res.send("internal server error");
+            });
         }
     })
     .put("/", function (req, res) {
