@@ -2,7 +2,7 @@ const express = require("express");
 const controller = require("./controllers");
 const router = express.Router();
 const moment = require("moment");
-const groupDatesById = require("./utils/group-dates-by-id").default;
+const requestValidation = require("./utils/request-validation");
 
 const getDefaultRange = () => (
     [
@@ -16,18 +16,7 @@ router
     .all("/", function (req, res, next) {
         const {range} = req.query;
 
-        if (range) {
-            if (Array.isArray(range)) {
-                const from = Date.parse(range[0]);
-                const to = Date.parse(range[1]);
-
-                if (from && to && from <= to) {
-                    next();
-
-                    return;
-                }
-            }
-
+        if (!isDateRangeValid(range)) {
             res.status(400);
             res.send("range query is not properly formatted")
         }
@@ -62,22 +51,23 @@ router
         }
     })
     .get("/isavailable", function(req, res) {
-      const {id, range = getDefaultRange()} = req.query;
+        const {id, range = getDefaultRange()} = req.query;
 
-      if (!id) {
-        res.status(400);
-        res.send("Must include a property id");
-      }
-      controller.isAvailable(id, range)
-      .then((data) => {
-          res.status(200);
-          res.send(JSON.stringify(data));
-      })
-      .catch((err) => {
-        console.log("ERROR", err);
-          res.status(500);
-          res.send("internal server error");
-      });
+        if (!id) {
+            res.status(400);
+            res.send("Must include a property id");
+        }
+
+        controller.isAvailable(id, range)
+            .then((data) => {
+                res.status(200);
+                res.send(JSON.stringify(data));
+            })
+            .catch((err) => {
+                console.log("ERROR", err);
+                res.status(500);
+                res.send("internal server error");
+            });
     })
     .put("/", function (req, res) {
         const {id, dates} = req.query;
