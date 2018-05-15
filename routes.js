@@ -21,7 +21,7 @@ router
                 const from = Date.parse(range[0]);
                 const to = Date.parse(range[1]);
 
-                if (from && to && from < to) {
+                if (from && to && from <= to) {
                     next();
 
                     return;
@@ -41,7 +41,6 @@ router
             console.log(groupDatesById);
 
             controller.getAvailabilityForAllProperties(range)
-                .then(groupDatesById)
                 .then((data) => {
                     res.status(200);
                     res.send(JSON.stringify(data));
@@ -51,9 +50,7 @@ router
                     res.send("internal server error");
                 });
         } else {
-            console.log("HIIIIII");
             controller.getAvailabilityForProperty(id, range)
-            .then(groupDatesById)
             .then((data) => {
                 res.status(200);
                 res.send(JSON.stringify(data));
@@ -63,6 +60,24 @@ router
                 res.send("internal server error");
             });
         }
+    })
+    .get("/isavailable", function(req, res) {
+      const {id, range = getDefaultRange()} = req.query;
+
+      if (!id) {
+        res.status(400);
+        res.send("Must include a property id");
+      }
+      controller.isAvailable(id, range)
+      .then((data) => {
+          res.status(200);
+          res.send(JSON.stringify(data));
+      })
+      .catch((err) => {
+        console.log("ERROR", err);
+          res.status(500);
+          res.send("internal server error");
+      });
     })
     .put("/", function (req, res) {
         const {id, dates} = req.query;

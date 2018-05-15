@@ -5,4 +5,4 @@ const groupDatesById = (results) =>  _(results.Items)
     .mapValues((datesByProperty) => datesByProperty.map((property) => property.date.S))
     .value();
 
-exports.default = groupDatesById;
+module.exports = groupDatesById;
